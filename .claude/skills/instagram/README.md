@@ -1,6 +1,6 @@
-# Instagram Skills Squad
+# Instagram Skills
 
-> 9 skills de marketing para Instagram, vendorizadas de [sergebulaev/instagram-skills](https://github.com/sergebulaev/instagram-skills) (MIT, v1.0.32, commit `6a12448`).
+> 9 skills de marketing para Instagram, vendorizadas em `.claude/skills/instagram/` a partir de [sergebulaev/instagram-skills](https://github.com/sergebulaev/instagram-skills) (MIT, v1.0.32, commit `6a12448`).
 
 README original: [`README.upstream.md`](README.upstream.md) · Licença: [`LICENSE`](LICENSE)
 
@@ -25,19 +25,19 @@ Roteamento entre skills: [`SKILL.md`](SKILL.md).
 **Como plugin do Claude Code** (a partir da raiz do repo):
 
 ```
-/plugin marketplace add ./squads/instagram-skills
+/plugin marketplace add ./.claude/skills/instagram
 /plugin install instagram-skills@instagram-skills
 ```
 
-**Direto:** peça ao agente pra ler `squads/instagram-skills/skills/<skill>/SKILL.md` antes da task.
+**Direto:** peça ao agente pra ler `.claude/skills/instagram/skills/<skill>/SKILL.md` antes da task.
 
 ## Leitura e publicação (opcional)
 
 Escrever caption/carrossel/plano não precisa de nada. Pra ler dados reais ou publicar:
 
 ```bash
-pip install -r squads/instagram-skills/requirements.txt
-cp squads/instagram-skills/.env.example squads/instagram-skills/.env  # preencha APIFY_TOKEN / PUBLORA_API_KEY
+pip install -r .claude/skills/instagram/requirements.txt
+cp .claude/skills/instagram/.env.example .claude/skills/instagram/.env  # preencha APIFY_TOKEN / PUBLORA_API_KEY
 ```
 
 Nada publica sem aprovação explícita (`lib/approval.py`).
