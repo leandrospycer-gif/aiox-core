@@ -1,0 +1,73 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# Squad: Instagram Skills
+# Domain: Instagram Marketing — captions, carrosséis, hooks, hashtags, planejamento
+# Created: 2026-10-17
+# Version: 1.0.32 (espelha a versão upstream vendorizada)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+squad:
+  name: instagram-skills
+  display_name: "Instagram Skills Squad"
+  version: "1.0.32"
+  domain: "Instagram Marketing"
+  description: |
+    Bundle de 9 skills de marketing para Instagram (caption writer, carousel
+    planner, hook extractor, hashtag strategist, humanizer, content planner,
+    repurposer, profile optimizer, audience insights). Fluxo draft → aprovação
+    → publish. Leitura de dados via Apify e publicação via Publora (opcionais).
+
+  keywords:
+    - instagram
+    - social-media
+    - marketing
+    - captions
+    - carousel
+    - reels
+    - hashtags
+
+  entry_skill: SKILL.md
+  created_by: "vendored"
+  created_at: "2026-10-17"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# UPSTREAM
+# ─────────────────────────────────────────────────────────────────────────────
+
+upstream:
+  repo: "https://github.com/sergebulaev/instagram-skills"
+  commit: "6a124481d0ebe9b6d3ac1323ed2a2abc40c7e1d7"
+  version: "1.0.32"
+  license: "MIT"
+  author: "Serge Bulaev"
+  excluded:
+    - ".git/, .github/ (CI do upstream)"
+    - ".codex-plugin/, .codex-marketplace/, .agents/ (empacotamento Codex)"
+    - "CLAUDE.md, AGENTS.md (regras de contribuição do upstream)"
+    - "assets/hero.png, assets/social-preview.jpg (imagens do README)"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SKILLS
+# ─────────────────────────────────────────────────────────────────────────────
+
+skills:
+  - ig-caption-writer
+  - ig-carousel-planner
+  - ig-hook-extractor
+  - ig-hashtag-strategist
+  - ig-humanizer
+  - ig-content-planner
+  - ig-repurposer
+  - ig-profile-optimizer
+  - ig-audience-insights
+
+# ─────────────────────────────────────────────────────────────────────────────
+# DEPENDÊNCIAS EXTERNAS (opcionais — só para leitura/publicação)
+# ─────────────────────────────────────────────────────────────────────────────
+
+dependencies:
+  python: "requirements.txt (requests, python-dotenv)"
+  env:
+    - APIFY_TOKEN          # ig-audience-insights / ig-hook-extractor (leitura)
+    - PUBLORA_API_KEY      # publicação
+    - INSTAGRAM_PLATFORM_ID
+    - PIXFARO_TOKEN        # geração de imagem (opcional)

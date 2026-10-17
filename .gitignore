@@ -62,6 +62,7 @@ squads/*
 !squads/_example/
 # Published squads (whitelisted for repository)
 !squads/claude-code-mastery/
+!squads/instagram-skills/
 keys/
 *.secret
 *.credentials
