@@ -18,7 +18,9 @@
     --s-aprovacao: #b77806;
     --s-ajuste: #c2392f;
     --s-aprovado: #23835a;
+    --s-agendado: #0f7f8c;
     --s-publicado: #6b4bb0;
+    --today: rgba(154, 113, 32, .10);
     --shade: rgba(23, 22, 27, .45);
     --f-display: 'Bodoni Moda', 'Didot', Georgia, serif;
     --f-body: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -28,7 +30,8 @@
     :root:not([data-theme="light"]) {
       --bg: #131217; --surface: #1d1c22; --ink: #eceaf1; --muted: #a29fac; --line: #34323b;
       --accent: #d6aa52; --accent-ink: #17161b;
-      --s-ideia: #9d9aa8; --s-producao: #6f9ae6; --s-aprovacao: #e3a63a; --s-ajuste: #ec6f63; --s-aprovado: #4fbf8b; --s-publicado: #a587e8;
+      --s-ideia: #9d9aa8; --s-producao: #6f9ae6; --s-aprovacao: #e3a63a; --s-ajuste: #ec6f63; --s-aprovado: #4fbf8b; --s-agendado: #45c2cf; --s-publicado: #a587e8;
+      --today: rgba(214, 170, 82, .12);
       --shade: rgba(0, 0, 0, .6);
       color-scheme: dark;
     }
@@ -36,10 +39,34 @@
   :root[data-theme="dark"] {
     --bg: #131217; --surface: #1d1c22; --ink: #eceaf1; --muted: #a29fac; --line: #34323b;
     --accent: #d6aa52; --accent-ink: #17161b;
-    --s-ideia: #9d9aa8; --s-producao: #6f9ae6; --s-aprovacao: #e3a63a; --s-ajuste: #ec6f63; --s-aprovado: #4fbf8b; --s-publicado: #a587e8;
+    --s-ideia: #9d9aa8; --s-producao: #6f9ae6; --s-aprovacao: #e3a63a; --s-ajuste: #ec6f63; --s-aprovado: #4fbf8b; --s-agendado: #45c2cf; --s-publicado: #a587e8;
+    --today: rgba(214, 170, 82, .12);
     --shade: rgba(0, 0, 0, .6);
     color-scheme: dark;
   }
+
+  .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); overflow-x: auto; }
+  .tab { font: inherit; font-size: 14px; font-weight: 700; padding: 10px 16px; border: 0; border-bottom: 3px solid transparent; background: transparent; color: var(--muted); cursor: pointer; white-space: nowrap; }
+  .tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+  .tabpanel { display: grid; gap: 36px; }
+
+  .cal-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; align-items: center; margin-bottom: 14px; }
+  .cal-note { font-size: 13px; color: var(--muted); max-width: 62ch; margin: 0; }
+  .cal-nav { display: flex; gap: 6px; align-items: center; }
+  .cal-nav span { font-family: var(--f-mono); font-size: 13px; min-width: 150px; text-align: center; }
+  .cal-wrap { overflow-x: auto; padding-bottom: 6px; }
+  .cal { display: grid; grid-template-columns: repeat(7, minmax(120px, 1fr)); gap: 6px; min-width: 860px; }
+  .cal-dow { font-family: var(--f-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding: 0 6px 4px; }
+  .day { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; min-height: 120px; padding: 8px; display: grid; align-content: start; gap: 6px; }
+  .day.past { opacity: .55; }
+  .day.today { background: var(--today); border-color: var(--accent); }
+  .day-n { font-family: var(--f-mono); font-size: 12px; color: var(--muted); }
+  .ev { font: inherit; text-align: left; display: grid; gap: 2px; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line); border-left-width: 4px; background: var(--bg); color: var(--ink); cursor: pointer; font-size: 12px; line-height: 1.3; min-width: 0; }
+  .ev b { font-family: var(--f-mono); font-weight: 500; font-size: 11px; color: var(--muted); }
+  .ev span { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  .undated { margin-top: 18px; }
+  .when { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .when input { font: inherit; font-size: 14px; padding: 8px 10px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); }
 
   body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.5; }
   .wrap { max-width: 1240px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 64px; display: grid; gap: 36px; }
@@ -76,7 +103,7 @@
   .status { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; }
 
   .board { overflow-x: auto; padding-bottom: 8px; }
-  .cols { display: grid; grid-template-columns: repeat(6, minmax(230px, 1fr)); gap: 12px; min-width: 1420px; }
+  .cols { display: grid; grid-template-columns: repeat(7, minmax(220px, 1fr)); gap: 12px; min-width: 1600px; }
   .col { display: grid; align-content: start; gap: 10px; }
   .col-h { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; padding: 0 4px 6px; border-bottom: 2px solid var(--line); }
   .col-h b { margin-left: auto; font-family: var(--f-mono); font-weight: 500; color: var(--muted); }
@@ -140,6 +167,31 @@
     <div class="counts" id="counts" aria-label="Resumo por status"></div>
   </header>
 
+  <nav class="tabs" role="tablist" aria-label="Seções">
+    <button class="tab" role="tab" id="t-aprovacao" data-tab="aprovacao" type="button">Aprovação</button>
+    <button class="tab" role="tab" id="t-calendario" data-tab="calendario" type="button">Calendário</button>
+    <button class="tab" role="tab" id="t-biblioteca" data-tab="biblioteca" type="button">Biblioteca</button>
+  </nav>
+
+  <div class="tabpanel" id="p-calendario" role="tabpanel" aria-labelledby="t-calendario" hidden>
+    <section aria-labelledby="h-cal">
+      <div class="cal-head">
+        <div>
+          <h2 id="h-cal" style="margin:0 0 6px">Calendário de postagens</h2>
+          <p class="cal-note">Horário de Brasília. Clique num post pra ajustar data e horário. Plano Starter do Publora: até 3 posts agendados ao mesmo tempo e até 7 dias à frente, então o Claude agenda em lotes conforme você aprova.</p>
+        </div>
+        <div class="cal-nav">
+          <button class="btn" type="button" id="cal-prev" aria-label="Semanas anteriores">←</button>
+          <span id="cal-range"></span>
+          <button class="btn" type="button" id="cal-next" aria-label="Próximas semanas">→</button>
+        </div>
+      </div>
+      <div class="cal-wrap"><div class="cal" id="cal"></div></div>
+      <div class="undated" id="undated"></div>
+    </section>
+  </div>
+
+  <div class="tabpanel" id="p-aprovacao" role="tabpanel" aria-labelledby="t-aprovacao">
   <section aria-labelledby="h-fila">
     <h2 id="h-fila">Pra você aprovar <span id="fila-n"></span></h2>
     <div id="fila"></div>
@@ -151,11 +203,6 @@
     <div class="board" style="margin-top:14px"><div class="cols" id="cols"></div></div>
   </section>
 
-  <section aria-labelledby="h-lib">
-    <h2 id="h-lib">Biblioteca de mídia <span id="lib-n"></span></h2>
-    <div id="lib"></div>
-  </section>
-
   <section aria-labelledby="h-fluxo">
     <h2 id="h-fluxo">Como cada peça chega até aqui</h2>
     <ol class="flow">
@@ -164,9 +211,18 @@
       <li><b>Rascunho</b>Gancho, slides ou roteiro, legenda e hashtags.</li>
       <li><b>Revisão</b>Tira cara de IA e confere a primeira linha.</li>
       <li><b>Sua aprovação</b>Aprovar ou pedir ajuste, aqui nesta página.</li>
+      <li><b>Agendamento</b>O Claude agenda no Publora na data e horário do calendário.</li>
       <li><b>Publicação</b>Sai na data marcada e vira "Publicado".</li>
     </ol>
   </section>
+  </div>
+
+  <div class="tabpanel" id="p-biblioteca" role="tabpanel" aria-labelledby="t-biblioteca" hidden>
+    <section aria-labelledby="h-lib">
+      <h2 id="h-lib">Biblioteca de mídia <span id="lib-n"></span></h2>
+      <div id="lib"></div>
+    </section>
+  </div>
 </div>
 
 <div class="shade" id="shade" hidden></div>
@@ -179,8 +235,10 @@
     { id: 'aprovacao', label: 'Pra aprovar' },
     { id: 'ajuste', label: 'Ajuste pedido' },
     { id: 'aprovado', label: 'Aprovado' },
+    { id: 'agendado', label: 'Agendado' },
     { id: 'publicado', label: 'Publicado' },
   ];
+  const TABS = ['aprovacao', 'calendario', 'biblioteca'];
   const FORMATOS = [
     { id: 'todos', label: 'Todos' },
     { id: 'carrossel', label: 'Carrossel' },
@@ -190,7 +248,11 @@
   ];
   const DIAS = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
 
-  const state = { items: [], midia: {}, filtro: 'todos', open: null, db: null, canWrite: true, loaded: false, offline: false };
+  const state = { items: [], midia: {}, filtro: 'todos', open: null, db: null, canWrite: true, loaded: false, offline: false, tab: 'aprovacao', calOffset: 0 };
+
+  const pad = (n) => String(n).padStart(2, '0');
+  const isoDay = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  function mondayOf(d) { const x = new Date(d.getFullYear(), d.getMonth(), d.getDate()); const w = (x.getDay() + 6) % 7; x.setDate(x.getDate() - w); return x; }
 
   function thumbOf(midiaId) {
     const m = state.midia[midiaId];
@@ -236,7 +298,7 @@
     meta.append(el('span', 'tag', fmtLabel(item.formato)));
     if (item.publico) meta.append(el('span', 'tag aud', item.publico));
     if (item.marca) meta.append(el('span', null, item.marca));
-    meta.append(el('span', 'date', '· ' + fmtDate(item.data)));
+    meta.append(el('span', 'date', '· ' + fmtDate(item.data) + (item.hora ? ' ' + item.hora : '')));
     const fotos = (Array.isArray(item.fotos) ? item.fotos : []).map(thumbOf).filter(Boolean);
     if (!compact && fotos.length) {
       const row = el('div', 'cover-row');
@@ -346,7 +408,7 @@
     meta.append(el('span', 'tag', fmtLabel(item.formato)));
     if (item.publico) meta.append(el('span', 'tag aud', item.publico));
     if (item.marca) meta.append(el('span', null, item.marca));
-    meta.append(el('span', 'date', '· ' + fmtDate(item.data)));
+    meta.append(el('span', 'date', '· ' + fmtDate(item.data) + (item.hora ? ' ' + item.hora : '')));
     const h = el('h2', null, item.titulo || 'Sem título');
     h.id = 'p-title';
     head.append(meta, h, statusChip(item.status));
@@ -358,6 +420,8 @@
     panel.append(top);
 
     if (item.feedback && item.status === 'ajuste') panel.append(block('Seu pedido de ajuste', el('div', 'note', item.feedback)));
+    if (item.status === 'agendado' && item.agendadoPara) panel.append(block('No Publora', el('p', null, 'Agendado para ' + item.agendadoPara)));
+    panel.append(whenBlock(item));
     if (item.videoUrl) {
       const v = el('video', 'reel');
       v.src = item.videoUrl;
@@ -412,6 +476,98 @@
     x.focus();
   }
 
+  function whenBlock(item) {
+    const wrap = el('div', 'when');
+    const d = el('input');
+    d.type = 'date';
+    d.id = 'data-' + item.id;
+    d.value = item.data || '';
+    const t = el('input');
+    t.type = 'time';
+    t.id = 'hora-' + item.id;
+    t.value = item.hora || '';
+    const editable = state.db && state.canWrite && item.status !== 'publicado';
+    d.disabled = !editable;
+    t.disabled = !editable;
+    wrap.append(d, t);
+    const msg = el('span', 'msg');
+    if (editable) {
+      const b = el('button', 'btn', 'Salvar data');
+      b.type = 'button';
+      b.addEventListener('click', async () => {
+        if (!d.value) { msg.textContent = 'Escolha uma data.'; return; }
+        b.disabled = true;
+        try {
+          await state.db.collection('posts').doc(item.id).update({ data: d.value, hora: t.value || '', atualizadoEm: new Date().toISOString() });
+          msg.textContent = item.status === 'agendado' ? 'Salvo. Avise o Claude pra reagendar no Publora.' : 'Salvo.';
+        } catch (e) {
+          msg.textContent = 'Não deu pra salvar agora. Tente de novo.';
+        }
+        b.disabled = false;
+      });
+      wrap.append(b);
+    }
+    wrap.append(msg);
+    return block('Data e horário (Brasília)', wrap);
+  }
+
+  function renderCalendar() {
+    const box = $('cal');
+    box.replaceChildren();
+    const start = mondayOf(new Date());
+    start.setDate(start.getDate() + state.calOffset * 7);
+    const end = new Date(start);
+    end.setDate(end.getDate() + 20);
+    const fmt = (x) => `${pad(x.getDate())}/${pad(x.getMonth() + 1)}`;
+    $('cal-range').textContent = `${fmt(start)} a ${fmt(end)}`;
+    ['seg', 'ter', 'qua', 'qui', 'sex', 'sáb', 'dom'].forEach((w) => box.append(el('div', 'cal-dow', w)));
+    const today = isoDay(new Date());
+    const byDay = {};
+    state.items.forEach((i) => { if (i.data) (byDay[i.data] = byDay[i.data] || []).push(i); });
+    for (let k = 0; k < 21; k++) {
+      const day = new Date(start);
+      day.setDate(start.getDate() + k);
+      const key = isoDay(day);
+      const cell = el('div', 'day');
+      if (key === today) cell.classList.add('today');
+      else if (key < today) cell.classList.add('past');
+      cell.append(el('div', 'day-n', `${pad(day.getDate())}/${pad(day.getMonth() + 1)}`));
+      (byDay[key] || []).sort((a, b) => String(a.hora || '99').localeCompare(String(b.hora || '99'))).forEach((i) => {
+        const ev = el('button', 'ev');
+        ev.type = 'button';
+        ev.style.borderLeftColor = `var(--s-${statusOf(i.status).id})`;
+        ev.append(el('b', null, `${i.hora || '--:--'} · ${fmtLabel(i.formato)}`), el('span', null, i.titulo || 'Sem título'));
+        ev.title = statusOf(i.status).label;
+        ev.addEventListener('click', () => openPanel(i.id));
+        cell.append(ev);
+      });
+      box.append(cell);
+    }
+    const und = $('undated');
+    und.replaceChildren();
+    const sem = state.items.filter((i) => !i.data);
+    if (sem.length) {
+      und.append(el('h3', null, 'Sem data'));
+      const g = el('div', 'queue');
+      sem.forEach((i) => g.append(card(i)));
+      und.append(g);
+    }
+  }
+
+  function setTab(t) {
+    if (!TABS.includes(t)) t = 'aprovacao';
+    state.tab = t;
+    TABS.forEach((x) => {
+      $('p-' + x).hidden = x !== t;
+      $('t-' + x).setAttribute('aria-selected', String(x === t));
+    });
+    try { history.replaceState(null, '', '#' + t); } catch (e) {}
+  }
+  document.querySelectorAll('.tab').forEach((b) => b.addEventListener('click', () => setTab(b.dataset.tab)));
+  $('cal-prev').addEventListener('click', () => { state.calOffset -= 3; renderCalendar(); });
+  $('cal-next').addEventListener('click', () => { state.calOffset += 3; renderCalendar(); });
+  setTab((location.hash || '').replace('#', ''));
+
   function actions(item) {
     const box = el('div', 'actions');
     const msg = el('div', 'msg');
@@ -456,7 +612,7 @@
         save({ status: 'ajuste', feedback: t }, 'Pedido enviado. O Claude ajusta e devolve pra aprovação.');
       });
       box.append(row, ta, send);
-    } else if (item.status === 'aprovado') {
+    } else if (item.status === 'aprovado' || item.status === 'agendado') {
       const pub = el('button', 'btn', 'Marcar como publicado');
       pub.type = 'button';
       pub.addEventListener('click', () => save({ status: 'publicado', publicadoEm: new Date().toISOString() }, 'Marcado como publicado.'));
@@ -520,6 +676,7 @@
     renderFilters();
     renderBoard();
     renderLib();
+    renderCalendar();
     if (state.open) renderPanel();
   }
 
