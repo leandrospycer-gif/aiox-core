@@ -103,6 +103,17 @@
   .slides { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; counter-reset: s; }
   .slides li { counter-increment: s; display: grid; grid-template-columns: 34px 1fr; gap: 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; font-size: 14px; white-space: pre-wrap; }
   .slides li::before { content: counter(s); font-family: var(--f-mono); color: var(--accent); font-weight: 500; }
+  .slides li.has-img { grid-template-columns: 34px 88px 1fr; align-items: start; }
+  .slides li img, .cover, .lib img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 8px; background: var(--line); }
+  .cover-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+  .cover-row img { border-radius: 6px; }
+  .lib { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+  .lib figure { margin: 0; display: grid; gap: 6px; min-width: 0; }
+  .lib figcaption { font-size: 12px; color: var(--muted); line-height: 1.35; }
+  .lib figcaption b { display: block; color: var(--ink); font-family: var(--f-mono); font-weight: 500; font-size: 11px; }
+  .lib-group + .lib-group { margin-top: 20px; }
+  .lib-group h3 { margin: 0 0 10px; font-size: 14px; font-weight: 700; }
+  .lib-group h3 span { font-weight: 400; color: var(--muted); }
   .caption { white-space: pre-wrap; font-family: var(--f-body); font-size: 14px; background: var(--bg); border-radius: 10px; padding: 12px 14px; }
   .todo { margin: 0; padding-left: 18px; font-size: 14px; }
   .note { border-left: 3px solid var(--s-ajuste); padding: 8px 12px; background: color-mix(in srgb, var(--s-ajuste) 8%, transparent); border-radius: 0 8px 8px 0; font-size: 14px; }
@@ -139,6 +150,11 @@
     <div class="board" style="margin-top:14px"><div class="cols" id="cols"></div></div>
   </section>
 
+  <section aria-labelledby="h-lib">
+    <h2 id="h-lib">Biblioteca de mídia <span id="lib-n"></span></h2>
+    <div id="lib"></div>
+  </section>
+
   <section aria-labelledby="h-fluxo">
     <h2 id="h-fluxo">Como cada peça chega até aqui</h2>
     <ol class="flow">
@@ -173,7 +189,20 @@
   ];
   const DIAS = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
 
-  const state = { items: [], filtro: 'todos', open: null, db: null, canWrite: true, loaded: false, offline: false };
+  const state = { items: [], midia: {}, filtro: 'todos', open: null, db: null, canWrite: true, loaded: false, offline: false };
+
+  function thumbOf(midiaId) {
+    const m = state.midia[midiaId];
+    return m && m.thumb ? m : null;
+  }
+
+  function img(m) {
+    const i = el('img');
+    i.src = m.thumb;
+    i.alt = m.descricao || m.arquivo || '';
+    i.loading = 'lazy';
+    return i;
+  }
 
   const $ = (id) => document.getElementById(id);
   const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
@@ -207,6 +236,12 @@
     if (item.publico) meta.append(el('span', 'tag aud', item.publico));
     if (item.marca) meta.append(el('span', null, item.marca));
     meta.append(el('span', 'date', '· ' + fmtDate(item.data)));
+    const fotos = (Array.isArray(item.fotos) ? item.fotos : []).map(thumbOf).filter(Boolean);
+    if (!compact && fotos.length) {
+      const row = el('div', 'cover-row');
+      fotos.slice(0, 4).forEach((m) => row.append(img(m)));
+      c.append(row);
+    }
     c.append(meta, el('h3', null, item.titulo || 'Sem título'));
     if (!compact && item.gancho) c.append(el('p', 'hook', item.gancho));
     if (!compact) c.append(statusChip(item.status));
@@ -325,7 +360,14 @@
     if (item.gancho) panel.append(block('Gancho (primeira linha / slide 1)', el('p', 'hookbig', item.gancho)));
     if (Array.isArray(item.slides) && item.slides.length) {
       const ol = el('ol', 'slides');
-      item.slides.forEach((s) => ol.append(el('li', null, String(s))));
+      const fotos = Array.isArray(item.fotos) ? item.fotos : [];
+      item.slides.forEach((s, i) => {
+        const li = el('li');
+        const m = thumbOf(fotos[i]);
+        if (m) { li.classList.add('has-img'); li.append(img(m)); }
+        li.append(el('span', null, String(s)));
+        ol.append(li);
+      });
       panel.append(block(`Slides (${item.slides.length})`, ol));
     }
     if (Array.isArray(item.roteiro) && item.roteiro.length) {
@@ -420,11 +462,48 @@
   $('shade').addEventListener('click', closePanel);
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && state.open) closePanel(); });
 
+  function renderLib() {
+    const box = $('lib');
+    box.replaceChildren();
+    const all = Object.entries(state.midia).map(([id, m]) => ({ id, ...m }));
+    $('lib-n').textContent = all.length ? `${all.length} arquivos` : '';
+    if (!all.length) {
+      box.append(el('div', 'empty', state.loaded ? 'Nenhuma mídia ainda. Mande no chat o link da pasta do Drive de cada marca.' : 'Carregando…'));
+      return;
+    }
+    const groups = {};
+    all.forEach((m) => { const k = `${m.marca || 'Sem marca'} · ${m.colecao || 'Sem coleção'}`; (groups[k] = groups[k] || []).push(m); });
+    for (const [k, list] of Object.entries(groups)) {
+      const g = el('div', 'lib-group');
+      const fotos = list.filter((m) => m.tipo === 'foto').sort((a, b) => String(a.arquivo).localeCompare(String(b.arquivo)));
+      const videos = list.filter((m) => m.tipo !== 'foto');
+      const h = el('h3', null, k + ' ');
+      h.append(el('span', null, `${fotos.length} fotos · ${videos.length} vídeos`));
+      g.append(h);
+      const grid = el('div', 'lib');
+      fotos.forEach((m) => {
+        const f = el('figure');
+        if (m.thumb) f.append(img(m));
+        const cap = el('figcaption');
+        cap.append(el('b', null, m.arquivo || ''), document.createTextNode(m.descricao || 'Ainda não revisada'));
+        f.append(cap);
+        grid.append(f);
+      });
+      g.append(grid);
+      if (videos.length) {
+        const v = el('p', 'msg', 'Vídeos: ' + videos.map((m) => m.arquivo).join(', '));
+        g.append(v);
+      }
+      box.append(g);
+    }
+  }
+
   function render() {
     renderCounts();
     renderQueue();
     renderFilters();
     renderBoard();
+    renderLib();
     if (state.open) renderPanel();
   }
 
@@ -449,6 +528,15 @@
         render();
       },
       () => { state.offline = true; state.loaded = false; render(); },
+    );
+    db.collection('midia').onSnapshot(
+      (snap) => {
+        const map = {};
+        snap.docs.forEach((d) => { map[d.id] = d.data(); });
+        state.midia = map;
+        render();
+      },
+      () => {},
     );
   })();
 </script>
