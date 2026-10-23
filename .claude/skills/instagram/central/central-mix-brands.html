@@ -105,6 +105,7 @@
   .slides li::before { content: counter(s); font-family: var(--f-mono); color: var(--accent); font-weight: 500; }
   .slides li.has-img { grid-template-columns: 34px 88px 1fr; align-items: start; }
   .slides li img, .cover, .lib img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 8px; background: var(--line); }
+  video.reel { display: block; width: min(100%, 320px); aspect-ratio: 9 / 16; border-radius: 12px; background: #000; }
   .cover-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
   .cover-row img { border-radius: 6px; }
   .lib { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
@@ -357,6 +358,16 @@
     panel.append(top);
 
     if (item.feedback && item.status === 'ajuste') panel.append(block('Seu pedido de ajuste', el('div', 'note', item.feedback)));
+    if (item.videoUrl) {
+      const v = el('video', 'reel');
+      v.src = item.videoUrl;
+      v.controls = true;
+      v.playsInline = true;
+      v.preload = 'metadata';
+      const p = thumbOf(item.fotos && item.fotos[0]);
+      if (p) v.poster = p.thumb;
+      panel.append(block('Prévia do Reel', v));
+    }
     if (item.gancho) panel.append(block('Gancho (primeira linha / slide 1)', el('p', 'hookbig', item.gancho)));
     if (Array.isArray(item.slides) && item.slides.length) {
       const ol = el('ol', 'slides');
@@ -475,8 +486,9 @@
     all.forEach((m) => { const k = `${m.marca || 'Sem marca'} · ${m.colecao || 'Sem coleção'}`; (groups[k] = groups[k] || []).push(m); });
     for (const [k, list] of Object.entries(groups)) {
       const g = el('div', 'lib-group');
-      const fotos = list.filter((m) => m.tipo === 'foto').sort((a, b) => String(a.arquivo).localeCompare(String(b.arquivo)));
-      const videos = list.filter((m) => m.tipo !== 'foto');
+      const byName = (a, b) => String(a.arquivo).localeCompare(String(b.arquivo));
+      const fotos = list.filter((m) => m.tipo === 'foto').sort(byName);
+      const videos = list.filter((m) => m.tipo !== 'foto').sort(byName);
       const h = el('h3', null, k + ' ');
       h.append(el('span', null, `${fotos.length} fotos · ${videos.length} vídeos`));
       g.append(h);
@@ -489,11 +501,15 @@
         f.append(cap);
         grid.append(f);
       });
+      videos.forEach((m) => {
+        const f = el('figure');
+        if (m.thumb) f.append(img(m));
+        const cap = el('figcaption');
+        cap.append(el('b', null, '▶ ' + (m.arquivo || '') + (m.duracao ? ` · ${m.duracao}s` : '')), document.createTextNode(m.descricao || 'Ainda não revisado'));
+        f.append(cap);
+        grid.append(f);
+      });
       g.append(grid);
-      if (videos.length) {
-        const v = el('p', 'msg', 'Vídeos: ' + videos.map((m) => m.arquivo).join(', '));
-        g.append(v);
-      }
       box.append(g);
     }
   }
