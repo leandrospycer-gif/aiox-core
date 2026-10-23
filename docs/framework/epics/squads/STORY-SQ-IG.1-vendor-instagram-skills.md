@@ -29,6 +29,7 @@ pra usar caption/carrossel/hook/hashtag/planejamento sem instalar nada externo.
 ## File List
 
 - `package.json`
+- `.claude/skills/instagram/central/central-mix-brands.html` (central de aprovação publicada como artifact)
 - `.gitignore` (whitelist adicionada e depois removida)
 - `.claude/skills/instagram/**` (novo)
 - `docs/framework/epics/squads/STORY-SQ-IG.1-vendor-instagram-skills.md`

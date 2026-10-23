@@ -1,0 +1,454 @@
+<title>Central Mix Brands</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,700&family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  /* Layout: fila de aprovação no topo, quadro por status embaixo, painel lateral de detalhe */
+  :root {
+    --bg: #f3f2f5;
+    --surface: #ffffff;
+    --ink: #17161b;
+    --muted: #67646f;
+    --line: #dedce3;
+    --accent: #9a7120;
+    --accent-ink: #ffffff;
+    --s-ideia: #7b7886;
+    --s-producao: #2f62b8;
+    --s-aprovacao: #b77806;
+    --s-ajuste: #c2392f;
+    --s-aprovado: #23835a;
+    --s-publicado: #6b4bb0;
+    --shade: rgba(23, 22, 27, .45);
+    --f-display: 'Bodoni Moda', 'Didot', Georgia, serif;
+    --f-body: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --f-mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #131217; --surface: #1d1c22; --ink: #eceaf1; --muted: #a29fac; --line: #34323b;
+      --accent: #d6aa52; --accent-ink: #17161b;
+      --s-ideia: #9d9aa8; --s-producao: #6f9ae6; --s-aprovacao: #e3a63a; --s-ajuste: #ec6f63; --s-aprovado: #4fbf8b; --s-publicado: #a587e8;
+      --shade: rgba(0, 0, 0, .6);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #131217; --surface: #1d1c22; --ink: #eceaf1; --muted: #a29fac; --line: #34323b;
+    --accent: #d6aa52; --accent-ink: #17161b;
+    --s-ideia: #9d9aa8; --s-producao: #6f9ae6; --s-aprovacao: #e3a63a; --s-ajuste: #ec6f63; --s-aprovado: #4fbf8b; --s-publicado: #a587e8;
+    --shade: rgba(0, 0, 0, .6);
+    color-scheme: dark;
+  }
+
+  body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.5; }
+  .wrap { max-width: 1240px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 64px; display: grid; gap: 36px; }
+
+  header.top { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 16px; }
+  .brand small { display: block; font-family: var(--f-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .brand h1 { margin: 4px 0 0; font-family: var(--f-display); font-weight: 700; font-size: clamp(30px, 5vw, 44px); line-height: 1.05; text-wrap: balance; }
+  .brand p { margin: 8px 0 0; color: var(--muted); max-width: 60ch; }
+
+  .counts { display: flex; flex-wrap: wrap; gap: 8px; }
+  .count { display: flex; align-items: baseline; gap: 8px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); font-size: 13px; }
+  .count b { font-variant-numeric: tabular-nums; font-size: 16px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex: none; align-self: center; }
+
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { font: inherit; font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--ink); cursor: pointer; }
+  .chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .chip:focus-visible, button:focus-visible, textarea:focus-visible, .card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  section > h2 { margin: 0 0 14px; font-family: var(--f-display); font-weight: 500; font-size: 24px; display: flex; align-items: baseline; gap: 10px; }
+  section > h2 span { font-family: var(--f-mono); font-size: 13px; color: var(--muted); font-weight: 400; }
+
+  .queue { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+  .card { text-align: left; font: inherit; color: inherit; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px; display: grid; gap: 10px; cursor: pointer; min-width: 0; }
+  .card:hover { border-color: var(--muted); }
+  .card.hot { border-left: 4px solid var(--s-aprovacao); }
+  .card.fix { border-left: 4px solid var(--s-ajuste); }
+  .meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 12px; color: var(--muted); }
+  .tag { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: 3px 8px; border-radius: 6px; background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent); }
+  .tag.aud { background: color-mix(in srgb, var(--muted) 14%, transparent); color: var(--ink); }
+  .date { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+  .card h3 { margin: 0; font-size: 16px; line-height: 1.3; font-weight: 700; text-wrap: balance; }
+  .hook { margin: 0; color: var(--muted); font-size: 14px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .status { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; }
+
+  .board { overflow-x: auto; padding-bottom: 8px; }
+  .cols { display: grid; grid-template-columns: repeat(6, minmax(230px, 1fr)); gap: 12px; min-width: 1420px; }
+  .col { display: grid; align-content: start; gap: 10px; }
+  .col-h { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; padding: 0 4px 6px; border-bottom: 2px solid var(--line); }
+  .col-h b { margin-left: auto; font-family: var(--f-mono); font-weight: 500; color: var(--muted); }
+  .col .card { padding: 12px; gap: 6px; }
+  .col .card h3 { font-size: 14px; }
+  .none { color: var(--muted); font-size: 13px; padding: 6px 4px; }
+
+  .empty { background: var(--surface); border: 1px dashed var(--line); border-radius: 14px; padding: 24px; color: var(--muted); max-width: 70ch; }
+  .empty strong { color: var(--ink); }
+
+  .flow { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; margin: 0; padding: 0; list-style: none; counter-reset: f; }
+  .flow li { counter-increment: f; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; font-size: 13px; color: var(--muted); }
+  .flow li::before { content: counter(f); font-family: var(--f-mono); font-size: 12px; color: var(--accent); display: block; }
+  .flow li b { display: block; color: var(--ink); font-size: 14px; }
+
+  .shade { position: fixed; inset: 0; background: var(--shade); z-index: 20; }
+  .panel { position: fixed; top: 0; right: 0; bottom: 0; width: min(560px, 100%); background: var(--surface); z-index: 21; overflow-y: auto; border-left: 1px solid var(--line); padding: calc(20px + env(safe-area-inset-top, 0px)) max(20px, env(safe-area-inset-right, 0px)) calc(28px + env(safe-area-inset-bottom, 0px)) 20px; display: grid; gap: 18px; align-content: start; }
+  .panel-top { display: flex; justify-content: space-between; gap: 12px; align-items: start; }
+  .panel h2 { margin: 6px 0 0; font-family: var(--f-display); font-size: 26px; line-height: 1.15; font-weight: 700; text-wrap: balance; }
+  .x { font: inherit; font-size: 22px; line-height: 1; border: 0; background: transparent; color: var(--muted); cursor: pointer; padding: 4px 8px; }
+  .block h4 { margin: 0 0 6px; font-family: var(--f-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+  .block p, .block pre { margin: 0; }
+  .hookbig { font-family: var(--f-display); font-size: 20px; line-height: 1.3; }
+  .slides { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; counter-reset: s; }
+  .slides li { counter-increment: s; display: grid; grid-template-columns: 34px 1fr; gap: 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; font-size: 14px; white-space: pre-wrap; }
+  .slides li::before { content: counter(s); font-family: var(--f-mono); color: var(--accent); font-weight: 500; }
+  .caption { white-space: pre-wrap; font-family: var(--f-body); font-size: 14px; background: var(--bg); border-radius: 10px; padding: 12px 14px; }
+  .todo { margin: 0; padding-left: 18px; font-size: 14px; }
+  .note { border-left: 3px solid var(--s-ajuste); padding: 8px 12px; background: color-mix(in srgb, var(--s-ajuste) 8%, transparent); border-radius: 0 8px 8px 0; font-size: 14px; }
+  .actions { display: grid; gap: 10px; border-top: 1px solid var(--line); padding-top: 16px; }
+  .row { display: flex; flex-wrap: wrap; gap: 8px; }
+  .btn { font: inherit; font-weight: 700; font-size: 14px; padding: 10px 16px; border-radius: 10px; border: 1px solid var(--line); background: transparent; color: var(--ink); cursor: pointer; }
+  .btn.ok { background: var(--s-aprovado); border-color: var(--s-aprovado); color: #fff; }
+  .btn.warn { border-color: var(--s-ajuste); color: var(--s-ajuste); }
+  .btn:disabled { opacity: .5; cursor: default; }
+  textarea { font: inherit; font-size: 14px; width: 100%; min-height: 90px; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); box-sizing: border-box; resize: vertical; }
+  .msg { font-size: 13px; color: var(--muted); min-height: 1.2em; }
+
+  @media (prefers-reduced-motion: no-preference) { .panel { animation: slide .18s ease-out; } @keyframes slide { from { transform: translateX(24px); opacity: .6; } } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <small>@showroom.mix_brands · Instagram</small>
+      <h1>Central de Conteúdo</h1>
+      <p>Cada carrossel, Reel e post passa por aqui antes de ir pro ar. O que está em <b>Pra aprovar</b> já tem gancho, legenda e hashtags prontos: é só abrir, conferir e aprovar.</p>
+    </div>
+    <div class="counts" id="counts" aria-label="Resumo por status"></div>
+  </header>
+
+  <section aria-labelledby="h-fila">
+    <h2 id="h-fila">Pra você aprovar <span id="fila-n"></span></h2>
+    <div id="fila"></div>
+  </section>
+
+  <section aria-labelledby="h-quadro">
+    <h2 id="h-quadro">Quadro da semana</h2>
+    <div class="filters" role="group" aria-label="Filtrar por formato" id="filters"></div>
+    <div class="board" style="margin-top:14px"><div class="cols" id="cols"></div></div>
+  </section>
+
+  <section aria-labelledby="h-fluxo">
+    <h2 id="h-fluxo">Como cada peça chega até aqui</h2>
+    <ol class="flow">
+      <li><b>Material</b>Você manda fotos, vídeos e o assunto da semana.</li>
+      <li><b>Plano</b>O Claude distribui por marca, público e formato.</li>
+      <li><b>Rascunho</b>Gancho, slides ou roteiro, legenda e hashtags.</li>
+      <li><b>Revisão</b>Tira cara de IA e confere a primeira linha.</li>
+      <li><b>Sua aprovação</b>Aprovar ou pedir ajuste, aqui nesta página.</li>
+      <li><b>Publicação</b>Sai na data marcada e vira "Publicado".</li>
+    </ol>
+  </section>
+</div>
+
+<div class="shade" id="shade" hidden></div>
+<aside class="panel" id="panel" hidden aria-modal="true" role="dialog" aria-labelledby="p-title"></aside>
+
+<script>
+  const STATUS = [
+    { id: 'ideia', label: 'Ideia' },
+    { id: 'producao', label: 'Em produção' },
+    { id: 'aprovacao', label: 'Pra aprovar' },
+    { id: 'ajuste', label: 'Ajuste pedido' },
+    { id: 'aprovado', label: 'Aprovado' },
+    { id: 'publicado', label: 'Publicado' },
+  ];
+  const FORMATOS = [
+    { id: 'todos', label: 'Todos' },
+    { id: 'carrossel', label: 'Carrossel' },
+    { id: 'reel', label: 'Reel' },
+    { id: 'post', label: 'Post' },
+    { id: 'story', label: 'Story' },
+  ];
+  const DIAS = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
+
+  const state = { items: [], filtro: 'todos', open: null, db: null, canWrite: true, loaded: false, offline: false };
+
+  const $ = (id) => document.getElementById(id);
+  const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
+  const statusOf = (id) => STATUS.find((s) => s.id === id) || STATUS[0];
+  const fmtLabel = (id) => (FORMATOS.find((f) => f.id === id) || { label: id || 'Post' }).label;
+
+  function fmtDate(iso) {
+    if (!iso) return 'sem data';
+    const [y, m, d] = String(iso).split('-').map(Number);
+    if (!y || !m || !d) return iso;
+    const dt = new Date(y, m - 1, d);
+    return `${DIAS[dt.getDay()]} ${String(d).padStart(2, '0')}/${String(m).padStart(2, '0')}`;
+  }
+
+  function statusChip(id) {
+    const s = statusOf(id);
+    const w = el('span', 'status');
+    const d = el('span', 'dot');
+    d.style.background = `var(--s-${s.id})`;
+    w.append(d, document.createTextNode(s.label));
+    return w;
+  }
+
+  function card(item, compact) {
+    const c = el('button', 'card');
+    c.type = 'button';
+    if (item.status === 'aprovacao') c.classList.add('hot');
+    if (item.status === 'ajuste') c.classList.add('fix');
+    const meta = el('div', 'meta');
+    meta.append(el('span', 'tag', fmtLabel(item.formato)));
+    if (item.publico) meta.append(el('span', 'tag aud', item.publico));
+    if (item.marca) meta.append(el('span', null, item.marca));
+    meta.append(el('span', 'date', '· ' + fmtDate(item.data)));
+    c.append(meta, el('h3', null, item.titulo || 'Sem título'));
+    if (!compact && item.gancho) c.append(el('p', 'hook', item.gancho));
+    if (!compact) c.append(statusChip(item.status));
+    c.addEventListener('click', () => openPanel(item.id));
+    return c;
+  }
+
+  function visible() {
+    return state.items.filter((i) => state.filtro === 'todos' || i.formato === state.filtro);
+  }
+
+  function renderCounts() {
+    const box = $('counts');
+    box.replaceChildren();
+    for (const s of STATUS) {
+      const n = state.items.filter((i) => i.status === s.id).length;
+      const c = el('div', 'count');
+      const d = el('span', 'dot');
+      d.style.background = `var(--s-${s.id})`;
+      c.append(d, el('span', null, s.label), el('b', null, String(n)));
+      box.append(c);
+    }
+  }
+
+  function renderQueue() {
+    const box = $('fila');
+    box.replaceChildren();
+    const list = state.items.filter((i) => i.status === 'aprovacao' || i.status === 'ajuste');
+    $('fila-n').textContent = state.loaded ? `${list.length} ${list.length === 1 ? 'peça' : 'peças'}` : '';
+    if (!state.loaded) {
+      const e = el('div', 'empty');
+      e.textContent = state.offline
+        ? 'Esta página precisa estar aberta no Claude para mostrar os conteúdos.'
+        : 'Carregando os conteúdos da semana…';
+      box.append(e);
+      return;
+    }
+    if (!state.items.length) {
+      const e = el('div', 'empty');
+      e.innerHTML = '<strong>Nenhum conteúdo ainda.</strong> Mande no chat as fotos, vídeos e o assunto da semana. O Claude monta os rascunhos e eles aparecem aqui prontos pra aprovar.';
+      box.append(e);
+      return;
+    }
+    if (!list.length) {
+      box.append(el('div', 'empty', 'Nada esperando por você agora. Os próximos rascunhos aparecem aqui quando ficarem prontos.'));
+      return;
+    }
+    const grid = el('div', 'queue');
+    list.forEach((i) => grid.append(card(i)));
+    box.append(grid);
+  }
+
+  function renderFilters() {
+    const box = $('filters');
+    box.replaceChildren();
+    for (const f of FORMATOS) {
+      const b = el('button', 'chip', f.label);
+      b.type = 'button';
+      b.id = 'f-' + f.id;
+      b.setAttribute('aria-pressed', String(state.filtro === f.id));
+      b.addEventListener('click', () => { state.filtro = f.id; try { localStorage.setItem('cmb-filtro', f.id); } catch (e) {} render(); });
+      box.append(b);
+    }
+  }
+
+  function renderBoard() {
+    const box = $('cols');
+    box.replaceChildren();
+    const items = visible();
+    for (const s of STATUS) {
+      const col = el('div', 'col');
+      const h = el('div', 'col-h');
+      const d = el('span', 'dot');
+      d.style.background = `var(--s-${s.id})`;
+      const list = items.filter((i) => i.status === s.id);
+      h.append(d, el('span', null, s.label), el('b', null, String(list.length)));
+      col.append(h);
+      if (!list.length) col.append(el('div', 'none', '—'));
+      list.forEach((i) => col.append(card(i, true)));
+      box.append(col);
+    }
+  }
+
+  function block(title, child) {
+    const b = el('div', 'block');
+    b.append(el('h4', null, title), child);
+    return b;
+  }
+
+  function renderPanel() {
+    const panel = $('panel');
+    const item = state.items.find((i) => i.id === state.open);
+    if (!item) { panel.hidden = true; $('shade').hidden = true; return; }
+    panel.replaceChildren();
+    panel.hidden = false;
+    $('shade').hidden = false;
+
+    const top = el('div', 'panel-top');
+    const head = el('div');
+    const meta = el('div', 'meta');
+    meta.append(el('span', 'tag', fmtLabel(item.formato)));
+    if (item.publico) meta.append(el('span', 'tag aud', item.publico));
+    if (item.marca) meta.append(el('span', null, item.marca));
+    meta.append(el('span', 'date', '· ' + fmtDate(item.data)));
+    const h = el('h2', null, item.titulo || 'Sem título');
+    h.id = 'p-title';
+    head.append(meta, h, statusChip(item.status));
+    const x = el('button', 'x', '×');
+    x.type = 'button';
+    x.setAttribute('aria-label', 'Fechar');
+    x.addEventListener('click', closePanel);
+    top.append(head, x);
+    panel.append(top);
+
+    if (item.feedback && item.status === 'ajuste') panel.append(block('Seu pedido de ajuste', el('div', 'note', item.feedback)));
+    if (item.gancho) panel.append(block('Gancho (primeira linha / slide 1)', el('p', 'hookbig', item.gancho)));
+    if (Array.isArray(item.slides) && item.slides.length) {
+      const ol = el('ol', 'slides');
+      item.slides.forEach((s) => ol.append(el('li', null, String(s))));
+      panel.append(block(`Slides (${item.slides.length})`, ol));
+    }
+    if (Array.isArray(item.roteiro) && item.roteiro.length) {
+      const ol = el('ol', 'slides');
+      item.roteiro.forEach((s) => ol.append(el('li', null, String(s))));
+      panel.append(block('Roteiro do Reel', ol));
+    }
+    if (item.legenda) {
+      const wrap = el('div');
+      wrap.style.display = 'grid';
+      wrap.style.gap = '8px';
+      const pre = el('pre', 'caption', item.legenda + (item.hashtags ? '\n\n' + item.hashtags : ''));
+      const copy = el('button', 'btn', 'Copiar legenda');
+      copy.type = 'button';
+      copy.style.justifySelf = 'start';
+      copy.addEventListener('click', async () => {
+        try { await navigator.clipboard.writeText(pre.textContent); copy.textContent = 'Legenda copiada'; }
+        catch (e) { const r = document.createRange(); r.selectNodeContents(pre); const s = getSelection(); s.removeAllRanges(); s.addRange(r); copy.textContent = 'Selecionada, use Ctrl+C'; }
+      });
+      wrap.append(pre, copy);
+      panel.append(block('Legenda', wrap));
+    }
+    if (Array.isArray(item.pendencias) && item.pendencias.length) {
+      const ul = el('ul', 'todo');
+      item.pendencias.forEach((p) => ul.append(el('li', null, String(p))));
+      panel.append(block('O que falta', ul));
+    }
+    if (item.skill) panel.append(block('Feito com', el('p', null, item.skill)));
+
+    panel.append(actions(item));
+    x.focus();
+  }
+
+  function actions(item) {
+    const box = el('div', 'actions');
+    const msg = el('div', 'msg');
+    msg.setAttribute('role', 'status');
+    if (!state.canWrite || !state.db) {
+      box.append(el('div', 'msg', state.db ? 'Você pode ver os conteúdos, mas só quem tem acesso de edição aprova.' : 'Abra esta página no Claude para aprovar.'));
+      return box;
+    }
+    const ref = state.db.collection('posts').doc(item.id);
+    const save = async (patch, done) => {
+      box.querySelectorAll('button, textarea').forEach((b) => { b.disabled = true; });
+      try {
+        await ref.update({ ...patch, atualizadoEm: new Date().toISOString() });
+        msg.textContent = done;
+      } catch (e) {
+        msg.textContent = e && e.code === 'invalid_argument'
+          ? 'Seu acesso não permite alterar este conteúdo.'
+          : 'Não deu pra salvar agora. Tente de novo em alguns segundos.';
+        box.querySelectorAll('button, textarea').forEach((b) => { b.disabled = false; });
+      }
+    };
+
+    if (item.status === 'aprovacao' || item.status === 'ajuste') {
+      const row = el('div', 'row');
+      const ok = el('button', 'btn ok', 'Aprovar');
+      ok.type = 'button';
+      ok.addEventListener('click', () => save({ status: 'aprovado', aprovadoEm: new Date().toISOString() }, 'Aprovado. Vai pro ar na data marcada.'));
+      const fix = el('button', 'btn warn', 'Pedir ajuste');
+      fix.type = 'button';
+      row.append(ok, fix);
+      const ta = el('textarea');
+      ta.id = 'ajuste-' + item.id;
+      ta.placeholder = 'O que mudar? Ex.: trocar a foto do slide 3, deixar a legenda mais curta…';
+      ta.hidden = true;
+      const send = el('button', 'btn warn', 'Enviar pedido de ajuste');
+      send.type = 'button';
+      send.hidden = true;
+      fix.addEventListener('click', () => { ta.hidden = false; send.hidden = false; ta.focus(); });
+      send.addEventListener('click', () => {
+        const t = ta.value.trim();
+        if (!t) { msg.textContent = 'Escreva o que precisa mudar antes de enviar.'; return; }
+        save({ status: 'ajuste', feedback: t }, 'Pedido enviado. O Claude ajusta e devolve pra aprovação.');
+      });
+      box.append(row, ta, send);
+    } else if (item.status === 'aprovado') {
+      const pub = el('button', 'btn', 'Marcar como publicado');
+      pub.type = 'button';
+      pub.addEventListener('click', () => save({ status: 'publicado', publicadoEm: new Date().toISOString() }, 'Marcado como publicado.'));
+      box.append(pub);
+    } else {
+      box.append(el('div', 'msg', item.status === 'publicado' ? 'Já está no ar.' : 'Ainda em preparo. Quando ficar pronto, aparece em "Pra você aprovar".'));
+    }
+    box.append(msg);
+    return box;
+  }
+
+  function openPanel(id) { state.open = id; renderPanel(); }
+  function closePanel() { state.open = null; renderPanel(); }
+  $('shade').addEventListener('click', closePanel);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && state.open) closePanel(); });
+
+  function render() {
+    renderCounts();
+    renderQueue();
+    renderFilters();
+    renderBoard();
+    if (state.open) renderPanel();
+  }
+
+  try { const f = localStorage.getItem('cmb-filtro'); if (f && FORMATOS.some((x) => x.id === f)) state.filtro = f; } catch (e) {}
+  render();
+
+  (async () => {
+    const use = window.claude && window.claude.use;
+    if (!use) { state.offline = true; render(); return; }
+    const db = await window.claude.use('db');
+    if (!db) { state.offline = true; render(); return; }
+    state.db = db;
+    try {
+      const user = await window.claude.use('user');
+      const can = user ? await user.can('data.write') : null;
+      state.canWrite = can !== false;
+    } catch (e) { state.canWrite = true; }
+    db.collection('posts').orderBy('data').onSnapshot(
+      (snap) => {
+        state.items = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+        state.loaded = true;
+        render();
+      },
+      () => { state.offline = true; state.loaded = false; render(); },
+    );
+  })();
+</script>
