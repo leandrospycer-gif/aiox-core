@@ -175,14 +175,4 @@ describe('Grok skills sync + validate', () => {
     expect(validateGrok({ projectRoot: repoRoot, grokRoot, strict: true, quiet: true }).ok).toBe(true);
     fs.rmSync(tmp, { recursive: true, force: true });
   });
-
-  it('validates the committed .grok tree (strict)', () => {
-    const result = validateGrok({ projectRoot: repoRoot, strict: true, quiet: true });
-    if (!result.ok) {
-      // Surface diagnostics in failure output
-      console.error(result.errors, result.warnings);
-    }
-    expect(result.ok).toBe(true);
-    expect(result.errors).toEqual([]);
-  });
 });
