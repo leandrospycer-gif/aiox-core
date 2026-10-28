@@ -46,9 +46,13 @@ Arquivo: `https://drive.usercontent.google.com/download?id=<ID>&export=download&
   Use `SCRATCH=<pasta temporária>` (padrão: $TMPDIR/ig-ingest).
 - `mkdocs.py spec.json`: gera docs da coleção `midia` + lista de writes para ArtifactData batch.
 
-## Pendências (27–28/10/2026)
+## Pendências (atualizado 28/10/2026 à noite)
 
-- Reel Carol maiô pink (29/10) e Reel Carol kimono (01/11): aprovados, não agendados.
-- Reel Meia Loka Serenidade (30/10) e Carrossel Artemis (02/11): em aprovação.
-- Cota Publora de outubro esgotada; volta em 01/11.
+- Agendados no Publora (horário -03:00): Reel Carol maiô pink 29/10 09:30 (`6ae269816895dad5965ee96d`),
+  Reel Carol kimono 01/11 10:00 (`6ae269826895dad5965ee98e`), Carrossel Artemis 02/11 09:30 (`6ae2698342e75d8753f6885b`).
+  Autorização de imagem da Carol: OK (Leandro, 28/10).
+- Reel Meia Loka Serenidade (s5): remarcado pra 03/11 09:30, ainda **não agendado** (fila 3/3 cheia).
+  Agendar depois que o Reel de 29/10 publicar (lembrete marcado pra 29/10 10:00 BRT).
+- Cota Publora de outubro: usada a última vaga (r2). Volta em 01/11.
+- **Meta Graph API:** `META_IG_TOKEN` não estava no ambiente em 28/10. Leandro quer migrar (opção 2) assim que o token for configurado.
 - Pasta "2. Nadine & Agnes" (Onça Inverno 27) vazia/sem permissão; @ das influenciadoras pendentes.
