@@ -19,9 +19,12 @@ Leia isto antes de mexer no Instagram do @showroom.mix_brands.
 ## Regras do Leandro (ver também a coleção `regras`)
 
 1. **Sempre mostrar prévia e esperar aprovação** antes de publicar/agendar (inclusive stories).
+   **Sempre confirmar a legenda final** antes de postar, inclusive quando ela mudar depois de aprovada.
 2. **Não misturar coleções** na mesma divulgação.
-3. **Inverno 27** (Onça Preta, Meia Loka) = **só story**, em venda (pode chamar lojista; ex.: "Já disponível para lojistas de MT e MS").
+3. **Inverno 27** (Onça Preta, Meia Loka) = **só story**, em venda pra lojista.
 4. **Alto Verão 27** (Onça Preta Artemis, Meia Loka Serenidade, Pigmento Sense Resort) = feed/carrossel/reels/story, mas **venda encerrada**: só divulgação pro cliente final, **sem chamada pro showroom**.
+4b. **Chamada padrão** (regra `chamada-padrao`, 28/10): Verão/Alto Verão = **"Já nas lojas!"**;
+   Inverno = **"Disponível para lojistas no Showroom Mix Brands"**.
 5. Duzani Nativa 2027: ainda em venda.
 6. Sequências de story: fotos da **mesma família de tecido/estampa** + **1 a 2 vídeos da mesma família** (cada família tem seu "filmlook"/Reels).
 7. Conteúdo de influenciadora = só story, marcar o @ (handles ainda não informados).
@@ -50,9 +53,10 @@ Arquivo: `https://drive.usercontent.google.com/download?id=<ID>&export=download&
 
 - Agendados no Publora (horário -03:00): Reel Carol maiô pink 29/10 09:30 (`6ae269816895dad5965ee96d`),
   Reel Carol kimono 01/11 10:00 (`6ae269826895dad5965ee98e`), Carrossel Artemis 02/11 09:30 (`6ae2698342e75d8753f6885b`).
-  Autorização de imagem da Carol: OK (Leandro, 28/10).
+  Autorização de imagem da Carol: OK (Leandro, 28/10). Legendas dos três já com "Já nas lojas!" (confirmadas).
 - Reel Meia Loka Serenidade (s5): remarcado pra 03/11 09:30, ainda **não agendado** (fila 3/3 cheia).
-  Agendar depois que o Reel de 29/10 publicar (lembrete marcado pra 29/10 10:00 BRT).
+  Legenda com "Já nas lojas!" já confirmada. Agendar depois que o Reel de 29/10 publicar
+  (lembrete `trig_01C3dxBXbTYNoWZJqNFLzURp` pra 29/10 10:00 BRT).
 - Cota Publora de outubro: usada a última vaga (r2). Volta em 01/11.
 - **Meta Graph API:** `META_IG_TOKEN` não estava no ambiente em 28/10. Leandro quer migrar (opção 2) assim que o token for configurado.
 - Pasta "2. Nadine & Agnes" (Onça Inverno 27) vazia/sem permissão; @ das influenciadoras pendentes.
