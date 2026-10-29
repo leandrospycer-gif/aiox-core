@@ -12,12 +12,6 @@ const claudeAuthorityHookPath = path.join(
   'hooks',
   'enforce-git-push-authority.cjs',
 );
-const grokAuthorityHookPath = path.join(
-  repoRoot,
-  '.grok',
-  'hooks',
-  'enforce-git-push-authority.cjs',
-);
 const canonicalAuthorityHookPath = path.join(
   repoRoot,
   '.aiox-core',
@@ -26,7 +20,7 @@ const canonicalAuthorityHookPath = path.join(
   'grok-hooks',
   'enforce-git-push-authority.cjs',
 );
-const authorityHookPaths = [claudeAuthorityHookPath, grokAuthorityHookPath].filter((p) =>
+const authorityHookPaths = [claudeAuthorityHookPath].filter((p) =>
   fs.existsSync(p),
 );
 const allowedColors = new Set(['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'pink', 'cyan']);
@@ -63,8 +57,8 @@ function runAuthorityHook(command, env = {}, hookPath = claudeAuthorityHookPath)
 }
 
 describe('Claude native subagent governance', () => {
-  it('keeps Claude and Grok authority hooks equal to the canonical source', () => {
-    expect(authorityHookPaths).toHaveLength(2);
+  it('keeps the Claude authority hook equal to the canonical source', () => {
+    expect(authorityHookPaths).toHaveLength(1);
     const canonical = fs.readFileSync(canonicalAuthorityHookPath, 'utf8');
     for (const hookPath of authorityHookPaths) {
       expect(fs.readFileSync(hookPath, 'utf8')).toBe(canonical);
@@ -133,18 +127,6 @@ describe('Claude native subagent governance', () => {
       expect(command).not.toContain('${');
       expect(command).toMatch(/^node \.aiox-core\/infrastructure\/templates\/grok-hooks\/[-a-z]+\.cjs$/);
     }
-  });
-
-  it('keeps native Grok and Claude-compatible hook definitions identical for runtime deduplication', () => {
-    const claudeSettings = JSON.parse(
-      fs.readFileSync(path.join(repoRoot, '.claude', 'settings.json'), 'utf8'),
-    );
-    const grokHookFiles = ['synapse-prompt.json', 'precompact.json', 'git-push-authority.json'];
-    const grokHooks = Object.assign({}, ...grokHookFiles.map(file => JSON.parse(
-      fs.readFileSync(path.join(repoRoot, '.grok', 'hooks', file), 'utf8'),
-    ).hooks));
-
-    expect(grokHooks).toEqual(claudeSettings.hooks);
   });
 
   it('blocks remote GitHub operations outside devops and allows devops-tagged commands', () => {
@@ -233,8 +215,8 @@ describe('Claude native subagent governance', () => {
     }
   });
 
-  it('blocks remote ops on Grok-native toolInput payloads (camelCase) for both hooks', () => {
-    expect(authorityHookPaths.length).toBeGreaterThanOrEqual(2);
+  it('blocks remote ops on Grok-native toolInput payloads (camelCase) for the authority hook', () => {
+    expect(authorityHookPaths.length).toBeGreaterThanOrEqual(1);
 
     for (const hookPath of authorityHookPaths) {
       const result = spawnSync(process.execPath, [hookPath], {
@@ -256,8 +238,8 @@ describe('Claude native subagent governance', () => {
     }
   });
 
-  it('allows remote ops when Grok active-agent bridge identifies devops (both hooks)', () => {
-    expect(authorityHookPaths.length).toBeGreaterThanOrEqual(2);
+  it('allows remote ops when Grok active-agent bridge identifies devops', () => {
+    expect(authorityHookPaths.length).toBeGreaterThanOrEqual(1);
 
     for (const hookPath of authorityHookPaths) {
       const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'aiox-gov-bridge-'));

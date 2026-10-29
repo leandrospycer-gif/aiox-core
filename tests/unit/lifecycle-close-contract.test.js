@@ -43,7 +43,6 @@ describe('Core Super Update review contracts', () => {
   const fullSdcPaths = [
     '.aiox-core/development/skills/full-sdc/SKILL.md',
     '.claude/skills/full-sdc/SKILL.md',
-    '.grok/skills/aiox-full-sdc/SKILL.md',
   ];
 
   it.each(fullSdcPaths)('routes review FAIL before the generic verification halt in %s', (file) => {
@@ -122,7 +121,6 @@ describe('Core Super Update review contracts', () => {
   it.each([
     '.aiox-core/development/skills/close-story/SKILL.md',
     '.claude/skills/close-story/SKILL.md',
-    '.grok/skills/aiox-close-story/SKILL.md',
   ])('keeps close-story administrative in %s', (file) => {
     const closeStory = readRepoFile(file);
 

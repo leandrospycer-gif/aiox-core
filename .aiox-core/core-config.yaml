@@ -46,14 +46,12 @@ ide:
   selected:
     - vscode
     - codex
-    - gemini
-    - cursor
     - claude-code
   configs:
     vscode: true
     codex: true
-    gemini: true
-    cursor: true
+    gemini: false
+    cursor: false
     zed: false
     claude-desktop: false
     claude-code: true
@@ -322,7 +320,7 @@ ideSync:
       path: .codex/agents
       format: full-markdown-yaml
     gemini:
-      enabled: true
+      enabled: false
       path: .gemini/rules/AIOX/agents
       format: full-markdown-yaml
     github-copilot:
@@ -330,15 +328,15 @@ ideSync:
       path: .github/agents
       format: github-copilot
     cursor:
-      enabled: true
+      enabled: false
       path: .cursor/rules/agents
       format: condensed-rules
     antigravity:
-      enabled: true
+      enabled: false
       path: .antigravity/rules/agents
       format: cursor-style
     kimi:
-      enabled: true
+      enabled: false
       path: .kimi/skills
       format: kimi-skill
       fallbackSources:
