@@ -54,9 +54,9 @@ Arquivo: `https://drive.usercontent.google.com/download?id=<ID>&export=download&
 - Agendados no Publora (horário -03:00): Reel Carol maiô pink 29/10 09:30 (`6ae269816895dad5965ee96d`),
   Reel Carol kimono 01/11 10:00 (`6ae269826895dad5965ee98e`), Carrossel Artemis 02/11 09:30 (`6ae2698342e75d8753f6885b`).
   Autorização de imagem da Carol: OK (Leandro, 28/10). Legendas dos três já com "Já nas lojas!" (confirmadas).
-- Reel Meia Loka Serenidade (s5): **rascunho pronto** no Publora `6ae270706895dad5965f20d9` (fashion film 59s já subido, legenda + hashtags).
-  Falta só `update_post` → scheduled 03/11 09:30 -03:00 depois que o Reel de 29/10 publicar (fila 3/3 cheia).
-  Lembrete `trig_012zQTuMr3sAabzktkGDkTJa` pra 29/10 10:00 BRT (o antigo `trig_01C3dxBXbTYNoWZJqNFLzURp` foi pausado: criaria post duplicado).
+- 29/10: Reel Carol maiô pink **publicado** (IG `17926574913432313`).
+- Reel Meia Loka Serenidade (s5) **agendado** 03/11 09:30 -03:00 (`6ae270706895dad5965f20d9`). Fila de novo 3/3.
 - Cota Publora de outubro: usada a última vaga (r2). Volta em 01/11.
-- **Meta Graph API:** `META_IG_TOKEN` não estava no ambiente em 28/10. Leandro quer migrar (opção 2) assim que o token for configurado.
+- **Meta Graph API:** `META_IG_TOKEN` ainda ausente em 29/10 e `graph.facebook.com` **bloqueado** na rede do ambiente (403 no proxy).
+  Leandro recebeu o passo a passo (token de usuário do sistema no Business Manager + liberar o host em Allowed domains). Testar numa sessão nova.
 - Pasta "2. Nadine & Agnes" (Onça Inverno 27) vazia/sem permissão; @ das influenciadoras pendentes.
